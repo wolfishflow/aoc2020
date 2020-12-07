@@ -47,6 +47,7 @@ How many passwords are valid according to the new interpretation of the policies
 fun main() {
     testSample()
     runPart1()
+    runPart2()
 }
 
 fun testSample() {
@@ -62,11 +63,12 @@ fun testSample() {
     }
 
 }
-fun isPasswordValid( input: String): Boolean {
+
+fun isPasswordValid(input: String): Boolean {
     val conditionSplit = input.split(":")
     val numericCondition = conditionSplit.first().split(" ").first()
     val letterCondition = conditionSplit.first().split(" ").last().trim().single()
-    val password = conditionSplit.last()
+    val password = conditionSplit.last().trim()
     val minimum = numericCondition.split("-").first().toInt()
     val maximum = numericCondition.split("-").last().replace("-", "").toInt()
 
@@ -89,17 +91,44 @@ fun isPasswordValid( input: String): Boolean {
 
     //Filter the password by the letter condition, if the letter is within the range its valid
     val numberOfOccurrences = password.filter { letter -> letter == letterCondition }.length
-    return numberOfOccurrences in minimum .. maximum
+    return numberOfOccurrences in minimum..maximum
 }
 
 fun runPart1() {
     var validPasswords = 0
     File("src/day2/input").readLines().map { input ->
-        if(isPasswordValid(input)) {
+        if (isPasswordValid(input)) {
             validPasswords++
         }
     }
 
     println("Part1: # of valid passwords - $validPasswords")
+}
+
+fun runPart2() {
+    var validPasswords = 0
+    File("src/day2/input").readLines().map { input ->
+        if (isPasswordXorValid(input)) {
+            validPasswords++
+        }
+    }
+
+    println("Part2: # of valid passwords - $validPasswords")
+}
+
+fun isPasswordXorValid(input: String): Boolean {
+    val conditionSplit = input.split(":")
+    val numericCondition = conditionSplit.first().split(" ").first()
+    val letterCondition = conditionSplit.first().split(" ").last().trim().single()
+    val password = conditionSplit.last().trim()
+    val positionA = numericCondition.split("-").first().toInt()
+    val positionB = numericCondition.split("-").last().replace("-", "").toInt()
+
+    println("Numeric Condition - $numericCondition, Letter Condition - $letterCondition, Password - $password, Positions - $positionA & $positionB")
+
+    val isPositionAValid = password[positionA-1] == letterCondition
+    val isPositionBValid = password[positionB-1] == letterCondition
+
+    return isPositionAValid.xor(isPositionBValid)
 }
 
