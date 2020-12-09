@@ -41,19 +41,19 @@ cid (Country ID) - ignored, missing or not.
 
 */
 
-const val byr = "byr"
-const val iyr = "iyr"
-const val eyr = "eyr"
-const val hgt = "hgt"
-const val hcl = "hcl"
-const val ecl = "ecl"
-const val pid = "pid"
+const val BYR = "byr"
+const val IYR = "iyr"
+const val EYR = "eyr"
+const val HGT = "hgt"
+const val HCL = "hcl"
+const val ECL = "ecl"
+const val PID = "pid"
 const val cid = "cid"
 
 fun main() {
-//    runTest()
-//    runPart1()
-//    runPart2()
+    runTest()
+    runPart1()
+    runPart2()
     runTest2()
 }
 
@@ -140,13 +140,13 @@ fun getNumberOfValidPassportsWithValidFields(data: MutableList<HashMap<String, S
 fun isValidPassport(passport: HashMap<String, String>): Boolean {
     //Since cid is optional - we can add the field if it exists
     //Check hashmap for all the required fields, and ignore cid
-    return passport.containsKey(byr) &&
-            passport.containsKey(iyr) &&
-            passport.containsKey(eyr) &&
-            passport.containsKey(hgt) &&
-            passport.containsKey(hcl) &&
-            passport.containsKey(ecl) &&
-            passport.containsKey(pid)
+    return passport.containsKey(BYR) &&
+            passport.containsKey(IYR) &&
+            passport.containsKey(EYR) &&
+            passport.containsKey(HGT) &&
+            passport.containsKey(HCL) &&
+            passport.containsKey(ECL) &&
+            passport.containsKey(PID)
 }
 
 fun isValidByr(value: String): Boolean {
@@ -212,13 +212,13 @@ fun isValidPid(value: String): Boolean {
 fun isValidPassportWithValidFields(passport: HashMap<String, String>): Boolean {
     //Since cid is optional - we can add the field if it exists
     //Check hashmap for all the required fields, and ignore cid
-    return passport.containsKey(byr) && isValidByr(passport[byr]!!) &&
-            passport.containsKey(iyr) && isValidIyr(passport[iyr]!!) &&
-            passport.containsKey(eyr) && isValidEyr(passport[eyr]!!) &&
-            passport.containsKey(hgt) && isValidHgt(passport[hgt]!!) &&
-            passport.containsKey(hcl) && isValidHcl(passport[hcl]!!) &&
-            passport.containsKey(ecl) && isValidEcl(passport[ecl]!!) &&
-            passport.containsKey(pid) && isValidPid(passport[pid]!!)
+    return passport.containsKey(BYR) && isValidByr(passport[BYR]!!) &&
+            passport.containsKey(IYR) && isValidIyr(passport[IYR]!!) &&
+            passport.containsKey(EYR) && isValidEyr(passport[EYR]!!) &&
+            passport.containsKey(HGT) && isValidHgt(passport[HGT]!!) &&
+            passport.containsKey(HCL) && isValidHcl(passport[HCL]!!) &&
+            passport.containsKey(ECL) && isValidEcl(passport[ECL]!!) &&
+            passport.containsKey(PID) && isValidPid(passport[PID]!!)
 }
 
 
