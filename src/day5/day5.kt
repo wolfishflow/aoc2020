@@ -58,11 +58,11 @@ What is the ID of your seat?
 
 fun main() {
     runTest()
-    runPart1()
+    runPart1andPart2()
 }
 
 fun runTest() {
-    val testData = listOf("FBFBBFFRLR","BFFFBBFRRR", "FFFBBBFRRR", "BBFFBBFRLL")
+    val testData = listOf("FBFBBFFRLR", "BFFFBBFRRR", "FFFBBBFRRR", "BBFFBBFRLL")
     val seatIds = mutableListOf<Int>()
     testData.map {
         seatIds.add(getDetailsFromSeatData(it))
@@ -71,7 +71,7 @@ fun runTest() {
     println("Max seatId is:${seatIds.maxOf { it }}")
 }
 
-fun runPart1() {
+fun runPart1andPart2() {
     val input = File("src/day5/input").useLines { files ->
         files.toList()
     }
@@ -82,7 +82,9 @@ fun runPart1() {
     }
     seatIds.sort()
     println("Part 1: Max seatId is:${seatIds.maxOf { it }}")
+    println("Part 2: Missing seatId is:${findMissingSeatId(seatIds)}")
 }
+
 
 fun getDetailsFromSeatData(seatData: String): Int {
     var upperBoundsRow = 127
@@ -97,11 +99,11 @@ fun getDetailsFromSeatData(seatData: String): Int {
                 when (currentChar) {
                     'F' -> {
                         //Take lower half (towards 0)
-                        upperBoundsRow = lowerBoundsRow + (upperBoundsRow - lowerBoundsRow ) / 2
+                        upperBoundsRow = lowerBoundsRow + (upperBoundsRow - lowerBoundsRow) / 2
                     }
                     'B' -> {
                         //Take upper half (towards 127)
-                         lowerBoundsRow = lowerBoundsRow + (upperBoundsRow - lowerBoundsRow) / 2 + 1
+                        lowerBoundsRow = lowerBoundsRow + (upperBoundsRow - lowerBoundsRow) / 2 + 1
                     }
                 }
             }
@@ -109,7 +111,7 @@ fun getDetailsFromSeatData(seatData: String): Int {
                 when (currentChar) {
                     'L' -> {
                         //Take lower half (towards 0)
-                        upperBoundsCol = lowerBoundsCol + (upperBoundsCol - lowerBoundsCol ) / 2
+                        upperBoundsCol = lowerBoundsCol + (upperBoundsCol - lowerBoundsCol) / 2
                     }
                     'R' -> {
                         //Take upper half (towards 7)
@@ -119,9 +121,21 @@ fun getDetailsFromSeatData(seatData: String): Int {
             }
         }
     }
-    val seatId = lowerBoundsRow*8+lowerBoundsCol
+    val seatId = lowerBoundsRow * 8 + lowerBoundsCol
     //println("Row:$lowerBoundsRow Col:$lowerBoundsCol SeatId:$seatId")
     return seatId
+}
+
+fun findMissingSeatId(seatIds: MutableList<Int>) : Int {
+    //iterate from start to end (avoiding OOB)
+    for (currentIndex in 0 until seatIds.size - 1) {
+        // the seats with IDs +1 and -1 from yours will be in your list
+        // If we add +1 to the current indexed value , and if it doesn't equal the index+1 value , its a missing seat
+        if (seatIds[currentIndex]+1 != seatIds[currentIndex+1]) {
+            return seatIds[currentIndex]+1
+        }
+    }
+    return 0
 }
 
 
