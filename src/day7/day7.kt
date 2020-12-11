@@ -34,15 +34,45 @@ So, in this example, the number of bag colors that can eventually contain at lea
 
 How many bag colors can eventually contain at least one shiny gold bag?
 
+
+--- Part Two ---
+It's getting pretty expensive to fly these days - not because of ticket prices, but because of the ridiculous number of bags you need to buy!
+
+Consider again your shiny gold bag and the rules from the above example:
+
+faded blue bags contain 0 other bags.
+dotted black bags contain 0 other bags.
+vibrant plum bags contain 11 other bags: 5 faded blue bags and 6 dotted black bags.
+dark olive bags contain 7 other bags: 3 faded blue bags and 4 dotted black bags.
+So, a single shiny gold bag must contain 1 dark olive bag (and the 7 bags within it) plus 2 vibrant plum bags (and the 11 bags within each of those): 1 + 1*7 + 2 + 2*11 = 32 bags!
+
+Of course, the actual rules have a small chance of going several levels deeper than this example; be sure to count all of the bags, even if the nesting becomes topologically impractical!
+
+Here's another example:
+
+shiny gold bags contain 2 dark red bags.
+dark red bags contain 2 dark orange bags.
+dark orange bags contain 2 dark yellow bags.
+dark yellow bags contain 2 dark green bags.
+dark green bags contain 2 dark blue bags.
+dark blue bags contain 2 dark violet bags.
+dark violet bags contain no other bags.
+In this example, a single shiny gold bag must contain 126 other bags.
+
+How many individual bags are required inside your single shiny gold bag?
+
 */
 
+var sum = 0
+var level = 1
+val masterBagList = mutableListOf<Bag>()
 
 fun main() {
-    runPart1()
+    runPart1And2()
 }
 
 
-fun runPart1() {
+fun runPart1And2() {
     val file = File("src/day7/input").readLines().map {
         it.replace("bags", "bag")
     }
@@ -59,7 +89,6 @@ fun runPart1() {
 data class Bag(val name: String, val bagsContained: HashMap<String, Int>)
 
 fun buildMasterBagList(rules: List<String>) {
-    val masterBagList = mutableListOf<Bag>()
     // chart all rules into master bag list
 
     rules.map { rule ->
@@ -75,7 +104,10 @@ fun buildMasterBagList(rules: List<String>) {
         searchForBag("shiny gold bag", bag, masterBagList, tempSetOfTravelledBags, validSetOfTravelledBags)
     }
 
-    println(validSetOfTravelledBags.size)
+    println("Part1: ${validSetOfTravelledBags.size}")
+    val shinyGoldBag = masterBagList.find { bag -> bag.name == "shiny gold bag" }!!
+    sumOfAllBagsFromShinyGoldBag(shinyGoldBag, 1)
+    println("Part2: $sum")
 }
 
 
@@ -116,7 +148,6 @@ fun searchForBag(
     tempSetOfTravelledBags.remove(bag)
 }
 
-
 fun getBagFromRule(rule: String): Bag {
     //Syntax is - XXX XXX bags contain x xxx xxx bags, x xxx xxx bags.
     //Syntax is - XXX XXX bags contain x xxx xxx bags.
@@ -143,3 +174,20 @@ fun getBagFromRule(rule: String): Bag {
 
     return Bag(holdingBagName, contents)
 }
+
+
+fun sumOfAllBagsFromShinyGoldBag(bag: Bag, amount: Int) {
+    //initial bag is gold
+    //inside bag would be 2 dark red
+
+     bag.bagsContained.map { insideBag ->
+         sum += insideBag.value * amount
+
+         //Find the insideBag obj
+         val derivedBag = masterBagList.find { bag -> bag.name == insideBag.key }!!
+         if (derivedBag.bagsContained.isNotEmpty()) {
+             sumOfAllBagsFromShinyGoldBag(derivedBag, insideBag.value * amount)
+         }
+     }
+}
+
