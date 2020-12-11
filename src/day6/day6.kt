@@ -90,6 +90,7 @@ For each group, count the number of questions to which everyone answered "yes". 
 fun main() {
     runTest()
     runPart1()
+    runPart2()
 }
 
 fun runTest() {
@@ -103,6 +104,13 @@ fun runPart1() {
         determineUniqueAnswers(fileOutput)
     }
 }
+
+fun runPart2() {
+    File("src/day6/input").useLines { fileOutput ->
+        determineCommonUniqueAnswers(fileOutput)
+    }
+}
+
 
 fun determineUniqueAnswers(input: Sequence<String>) {
     var sum = 0
@@ -118,6 +126,38 @@ fun determineUniqueAnswers(input: Sequence<String>) {
         }
     }
     sum += answersSet.size
+    println(sum)
+}
+
+
+fun determineCommonUniqueAnswers(input: Sequence<String>) {
+    var sum = 0
+    var numberOfQuestions = 0
+    val answersMap = mutableMapOf<Char, Int>()
+    input.iterator().forEach { line ->
+        if (line.isEmpty()) {
+
+            answersMap.map {
+                if (it.value == numberOfQuestions) {
+                    sum++
+                }
+            }
+            answersMap.clear()
+            numberOfQuestions = 0
+        } else {
+            line.forEach { letter ->
+                answersMap[letter] = answersMap.getOrDefault(letter, 0)+1
+            }
+            numberOfQuestions++
+        }
+    }
+
+    answersMap.map {
+        if (it.value == numberOfQuestions) {
+            sum++
+        }
+    }
+
     println(sum)
 }
 
